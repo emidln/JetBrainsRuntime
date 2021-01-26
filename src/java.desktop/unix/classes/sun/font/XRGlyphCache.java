@@ -314,6 +314,18 @@ public class XRGlyphCache implements GlyphDisposedListener {
         }
     }
 
+    /**
+     * Each XR glyph image needs its own ID, which are allocated using
+     * this class. When using supplementary subpixel glyphs
+     * ({@code -Djava2d.font.subpixelResolution=4x2}), its XRGlyphCacheEntry
+     * may correspond to few images and therefore may need a range of IDs
+     * instead of a single one.
+     * @implNote This allocator uses a simple strategy for reusing IDs with
+     * a single pool per capacity (e.g. one pool containing only individual
+     * IDs and second pool containing ranges each with 8 sequential IDs).
+     * When pool is empty, new range of IDs is allocated by incrementing
+     * {@code nextID} counter.
+     */
     private static class GlyphIDAllocator {
 
         private List<Integer>[] freeIDsByCapacity = new List[]{
